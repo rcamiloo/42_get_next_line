@@ -1,0 +1,22 @@
+# Created by https://www.gitignore.io/api/c
+# Edit at https://www.gitignore.io/?templates=c
+
+### C ###
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+*.out
+*.a
+
+# Vim files
+*.swp
+*trail*
+
+# Meus testes
+test*
+
+# Mac
+.DS_Store
+
