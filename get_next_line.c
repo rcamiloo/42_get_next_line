@@ -6,7 +6,7 @@
 /*   By: camilo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 21:22:03 by camilo            #+#    #+#             */
-/*   Updated: 2020/02/27 12:55:34 by camilo           ###   ########.fr       */
+/*   Updated: 2020/02/27 23:47:53 by rcamilo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (s2)
 		memcpy(dest + size_s1, s2, size_s2);
 	dest[size_s1 + size_s2] = '\0';
-	free(s1);
 	return (dest);
 }
 
@@ -54,39 +53,49 @@ size_t ft_strclen(char *s, int c)
 int	get_next_line(int fd, char **line)
 {
 	char	*buf;
-	char	*tmp;
+	static char	*tmp;
 	char	*tmp1;
 	size_t	size;
 	size_t	partial_size;
-	static char *partial;
+	char *partial;
 
 	if(!(buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1)))
 		return (-1);
-	if(!(tmp = malloc(sizeof(char) * 100)))
-		return (-1);
-	memset(buf, '\0', 100);
+	if (!tmp)
+	{
+		if(!(tmp = malloc(sizeof(char) * 1)))
+			return (-1);
+		tmp[0] = '\0';
+	}
 	size = 1;
 	partial_size = 0;
-	printf("aqui 1\n");
 	while (size > 0)
 	{
 		memset(buf, '\0', BUFFER_SIZE + 1);
 		size = read(fd, buf, BUFFER_SIZE);
 		tmp = ft_strjoin(tmp, buf);
 		partial_size = partial_size + BUFFER_SIZE;
-	printf("aqui %zu\n", partial_size);
 		if (strchr(buf, '\n'))
 			break;
 	}
-	printf("aqui saida 1\n");
-	printf("partial %s\n", tmp);
-	if(!(buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1)))
+		printf("temp1: %zu\n", partial_size);
+	if(!(partial = (char *)malloc(sizeof(char) * partial_size)))
 		return (-1);
+	printf("tempAAA");
+	memset(partial, '\0', partial_size);
 	tmp1 = memccpy(partial, tmp, '\n', partial_size);
 	tmp1--;
-	*tmp1 = '\0';
-	printf("partial %s\n", tmp);
-	line = &partial;
+	if (size != 0)
+	{
+		*tmp1 = '\0';
+		tmp = tmp + ft_strclen(tmp, '\n') + 1;
+		printf("temp2: %s\n", tmp);
+	}
+	else
+	{
+		free(tmp);
+	}
+	*line = partial;
 	return size;
 }
 
@@ -107,12 +116,15 @@ int		main(void)
 	else
 	{
 		printf("file opened, fd = %d\n", fd);
-		size = get_next_line(fd, &line[0]);
-		printf("size = %d\n", size);
-		printf("line = %s\n", line[0]);
-
-		
-
+		size = 1;
+		while (size > 0)
+		{
+			size = get_next_line(fd, &line[0]);
+			if (!size)
+				break;
+			printf("size = %d\n", size);
+			printf("line = %s\n", line[0]);
+		}
 	}
 	return (0);
 }
