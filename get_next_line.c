@@ -6,7 +6,7 @@
 /*   By: camilo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 21:22:03 by camilo            #+#    #+#             */
-/*   Updated: 2020/02/29 02:04:01 by rcamilo-         ###   ########.fr       */
+/*   Updated: 2020/02/29 18:42:52 by camilo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ char	*ft_return_line(char *complete)
 		return (NULL);
 	ft_memset(result, '\0', size + 1);
 	tmp1 = ft_memccpy(result, complete, '\n', size + 1);
-	if (size > 0)
+	if (tmp1)
+	{
 		tmp1--;
-	*tmp1 = '\0';
+		*tmp1 = '\0';
+	}
 	return (result);
 }
 
