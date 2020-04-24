@@ -20,3 +20,6 @@ test*
 # Mac
 .DS_Store
 
+
+# Folders de teste
+/42TESTERS-GNL/
