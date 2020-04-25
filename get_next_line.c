@@ -35,6 +35,7 @@ int		get_line(char **complete_line, char **result_line)
 	}
 	else
 	{
+		free(*complete_line);
 		*complete_line = NULL;
 		return (0);
 	}
