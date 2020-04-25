@@ -34,7 +34,11 @@ int		get_line(char **complete_line, char **result_line)
 		return (1);
 	}
 	else
+	{
+		*complete_line = NULL;
 		return (0);
+	}
+
 }
 
 int		get_next_line(int fd, char **line)
