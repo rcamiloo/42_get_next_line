@@ -10,7 +10,7 @@ int		main(void)
 
 	line = malloc(sizeof(char*) * 10);
 	// OPEN THE FILE
-	fd = open("teste.txt", O_RDONLY);
+	fd = open("empty.txt", O_RDONLY);
 	if (fd < 0) 
 	{
 		printf("\033[1;31mCould not open file\n");

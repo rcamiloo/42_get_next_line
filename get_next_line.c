@@ -23,8 +23,8 @@ int		get_line(char **complete_line, char **result_line)
 	*result_line = ft_substr(*complete_line, 0, len) ;
 	if ((*complete_line)[len] == '\n')
 	{
-		tmp = complete_line[len] + 1;
-		free(complete_line);
+		tmp = ft_strdup(&(*complete_line)[len  + 1]);
+		free(*complete_line);
 		*complete_line = tmp;
 		return (1);
 	}
@@ -36,7 +36,7 @@ int		get_next_line(int fd, char **line)
 {
 	char			buf[BUFFER_SIZE + 1];
 	static char		*fds[255];
-	size_t			size;
+	int				size;
 	char			*tmp;
 
 	if(fd < 0 || line == NULL || BUFFER_SIZE == 0)
@@ -46,14 +46,21 @@ int		get_next_line(int fd, char **line)
 		{
 			return (get_line(&fds[fd], line));
 		}
+	tmp = NULL;
+	size = 0;
 	while ((size = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[size] = '\0';
 		if (fds[fd] == NULL)
+		{
 			fds[fd] = ft_strdup(buf);
-		tmp = ft_strjoin(fds[fd], buf);
-		free(fds[fd]);
-		fds[fd] = tmp;
+		}
+		else
+		{
+			tmp = ft_strjoin(fds[fd], buf);
+			free(fds[fd]);
+			fds[fd] = tmp;
+		}
 		if (ft_strchr(buf, '\n'))
 			break;
 	}
