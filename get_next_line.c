@@ -18,6 +18,11 @@ int		get_line(char **complete_line, char **result_line)
 	int		len;
 
 	len = 0;
+	if (*complete_line == NULL)
+	{
+		*result_line = ft_strdup("");
+		return (0);
+	}
 	while ((*complete_line)[len] != '\n' && (*complete_line)[len])
 		len++;
 	*result_line = ft_substr(*complete_line, 0, len) ;
