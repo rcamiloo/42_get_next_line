@@ -6,96 +6,61 @@
 /*   By: camilo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 21:22:03 by camilo            #+#    #+#             */
-/*   Updated: 2020/02/29 18:42:52 by camilo           ###   ########.fr       */
+/*   Updated: 2020/04/24 22:00:51 by camilo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strjoin(char *s1, char *s2)
+int		ft_return_line(char **complete_line, char **result_line)
 {
-	size_t	size_s1;
-	size_t	size_s2;
-	char	*dest;
-
-	size_s1 = s1 ? ft_strlen(s1) : 0;
-	size_s2 = s2 ? ft_strlen(s2) : 0;
-	if(!(dest = (char *)malloc(sizeof(char) * (size_s1 + size_s2) + 1)))
-		return (NULL);
-	if (s1)
-		ft_memcpy(dest, s1, size_s1);
-	if (s2)
-		ft_memcpy(dest + size_s1, s2, size_s2);
-	dest[size_s1 + size_s2] = '\0';
-	return (dest);
-}
-
-size_t	ft_strclen(char *s, int c)
-{
-	size_t size;
-
-	size = 0;
-	while (*s++ != (char)c && *s)
-		size++;
-	return (size);
-}
-
-char	*ft_return_line(char *complete)
-{
-	size_t	size;
-	char	*result;
-	char	*tmp1;
-
-	size = ft_strclen(complete, '\n');
-	if (!(result = (char *)malloc(sizeof(char) * size + 1)))
-		return (NULL);
-	ft_memset(result, '\0', size + 1);
-	tmp1 = ft_memccpy(result, complete, '\n', size + 1);
-	if (tmp1)
+	len = 0;
+	while ((*complete_line)[len] != '\n' && *complete_line)
+		len++;
+	if ((*complete_line)[len] == '\n')
 	{
-		tmp1--;
-		*tmp1 = '\0';
+		*result_line = ft_substr(*complete_line, 0, len) ;
+		tmp = *complete_line[len] + 1;
+		free(complete_line);
+		complete_line = tmp;
+		return (1);
 	}
-	return (result);
+
+	tmp = (char *)malloc(sizeof(char) * len + 1);
+
+
+
+
+
+
 }
 
 int		get_next_line(int fd, char **line)
 {
-	char			*buf;
-	static char		*tmp;
+	char			buf[BUFFER_SIZE + 1];
+	static char		*fds[255];
 	size_t			size;
-	size_t			partial_size;
+	char			*tmp;
 
-	if (!tmp)
-	{
-		if (!(tmp = malloc(sizeof(char) * 1)))
-			return (-1);
-	}
-	else
-	{
-		if (ft_strchr(tmp, '\n'))
+	if(fd < 0 || line == NULL || BUFFER_SIZE == 0)
+		return (-1);
+	if (fds[fd])
+		if (ft_strstr(fds[fd], '\n'))
 		{
-			if (!(*line = ft_return_line(tmp)))
-				return (-1);
-			tmp = tmp + ft_strclen(tmp, '\n') + 1;
-			return (1);
+			return (get_line(fds[fd], *line))
 		}
-	}
-	if (!(buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1)))
-		return (-1);
-	size = 1;
-	partial_size = 0;
-	while (size > 0)
+	while (size = read(fd, buf, BUFFER_SIZE) > 0)
 	{
-		ft_memset(buf, '\0', BUFFER_SIZE + 1);
-		if (!(size = read(fd, buf, BUFFER_SIZE)))
-			return (0);
-		tmp = ft_strjoin(tmp, buf);
-		if (ft_strchr(buf, '\n'))
-			break ;
+		buf[size] = '\0';
+		if (fds[fd] == NULL)
+			fds[fd] = ft_strdup(buf);
+		tmp = ft_strjoin(fds[fd], buf);
+		free(fds[fd]);
+		fds[fd] = tmp;
+		if (ft_strstr(buf, '\n'))
+			break;
 	}
-	if (!(*line = ft_return_line(tmp)))
+	if (size < 0)
 		return (-1);
-	tmp = tmp + ft_strclen(tmp, '\n') + 1;
-	return (1);
+	return (get_line(fds[fd], *line))
 }
