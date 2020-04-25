@@ -6,7 +6,7 @@
 /*   By: camilo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/22 21:22:03 by camilo            #+#    #+#             */
-/*   Updated: 2020/04/24 23:25:18 by camilo           ###   ########.fr       */
+/*   Updated: 2020/04/25 03:43:41 by camilo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int		get_line(char **complete_line, char **result_line)
 	int		len;
 
 	len = 0;
-	while ((*complete_line)[len] != '\n' && *complete_line)
+	while ((*complete_line)[len] != '\n' && (*complete_line)[len])
 		len++;
 	*result_line = ft_substr(*complete_line, 0, len) ;
 	if ((*complete_line)[len] == '\n')
